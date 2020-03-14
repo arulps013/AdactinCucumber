@@ -3,6 +3,19 @@
   <groupId>ada.adc</groupId>
   <artifactId>AdactinCucu</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <build>
+  <plugins>
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.22.0</version>
+    <configuration>
+        <parallel>classesAndMethods</parallel>
+        <useUnlimitedThreads>true</useUnlimitedThreads>
+    </configuration>
+</plugin>
+  </plugins>
+  </build>
   <dependencies>
    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 <dependency>
@@ -30,13 +43,19 @@
     <version>2.4</version>
 </dependency>
 
-  
-  
-  
-  
-  
-  
-  
+  <!-- https://mvnrepository.com/artifact/net.masterthought/cucumber-reporting -->
+<dependency>
+    <groupId>net.masterthought</groupId>
+    <artifactId>cucumber-reporting</artifactId>
+    <version>4.11.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>3.7.1</version>
+</dependency>
+
   
   </dependencies>
 </project>

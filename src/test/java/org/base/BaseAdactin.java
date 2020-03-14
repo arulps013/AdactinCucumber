@@ -14,6 +14,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 public class BaseAdactin {
 	public static WebDriver driver;
 
@@ -27,14 +29,12 @@ public class BaseAdactin {
 			e.printStackTrace();
 		}
 	}
-
-	public WebDriver browserLaunch() {
-		System.setProperty("webdriver.chrome.driver",
-				"C:\\Users\\ARUL\\eclipse-workspace\\Day1\\src\\test\\java\\drivers\\chromedriver.exe");
+	public static void browserLaunch() {
+		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
-		screenShot();
-		return driver;
+		
+		
 	}
 
 	public void getURL(String URL) {

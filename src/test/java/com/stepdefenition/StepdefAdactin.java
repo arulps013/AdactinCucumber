@@ -8,6 +8,8 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import com.manager.PageObjectManager;
 import com.pom.BookHotelPOJO;
 import com.pom.ConfiramtionPOJO;
 import com.pom.LoginPOJO;
@@ -19,75 +21,68 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class StepdefAdactin extends BaseAdactin {
-	WebDriver driver;
+	PageObjectManager pageObjectManager;
 
 	@Given("go to Adactin page")
 	public void tc1() {
-		driver = browserLaunch();
+		getURL("https://www.adactin.com/HotelApp/");
 	}
 
 	@When("user enters username")
 	public void tc2(io.cucumber.datatable.DataTable data) throws InterruptedException {
-		LoginPOJO l;
-		SearchHotelPOJO sh;
-		getURL("https://www.adactin.com/HotelApp/");
+		pageObjectManager = new PageObjectManager();
 		Map<String, String> asMap = data.asMap(String.class, String.class);
 		String s1 = asMap.get("user");
 		String s2 = asMap.get("pass");
-		l = new LoginPOJO();
-		fill(l.getTxtUsername(), s1);
-		fill(l.getTxtPassword(), s2);
-		btnClick(l.getBtnLogin());
+		fill(pageObjectManager.getLoginPOJO().getTxtUsername(),s1);
+		fill(pageObjectManager.getLoginPOJO().getTxtPassword(), s2);
+		btnClick(pageObjectManager.getLoginPOJO().getBtnLogin());
 		Thread.sleep(1000);
 		screenShot();
-		sh = new SearchHotelPOJO();
-		dropDown(sh.getDdLocation()	, "Sydney");
-		dropDown(sh.getDdHotels(), "Hotel Sunshine");
-		dropDown(sh.getDdRoomType(), "Double");
-		dropDown(sh.getDdRoomNos(), "1 - One");
-		fill(sh.getTxtCheckIn(), "04/03/2020");
-		fill(sh.getTxtCheckOut(), "05/03/2020");
-		dropDown(sh.getDdAdult(), "1 - One");
-		dropDown(sh.getDdChild(), "1 - One");
-		btnClick(sh.getBtnSearch());
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdLocation(), "Sydney");
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdHotels(), "Hotel Sunshine");
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdRoomType(), "Double");
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdRoomNos(), "1 - One");
+		fill(pageObjectManager.getSearchHotelPOJO().getTxtCheckIn(), "04/03/2020");
+		fill(pageObjectManager.getSearchHotelPOJO().getTxtCheckOut(), "05/03/2020");
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdAdult(), "1 - One");
+		dropDown(pageObjectManager.getSearchHotelPOJO().getDdChild(), "1 - One");
+		btnClick(pageObjectManager.getSearchHotelPOJO().getBtnSearch());
 		screenShot();
-		}
-
-	@When("user clicks login button")
-	public void tc3()  {
-		SelectHotelPOJO sl = new SelectHotelPOJO();
-		btnClick(sl.getBtnRadio());
-		btnClick(sl.getBtnContinue());
-		screenShot();
-		BookHotelPOJO b = new BookHotelPOJO();
-		fill(b.getTxtFirstName(), "Arul");
-		fill(b.getTxtLastName(), "Murugan");
-		fill(b.getTxtAddress(), "Chennai");
-		fill(b.getTxtCCNum(), "1234123412341234");
-		dropDown(b.getDdCCType(), "VISA");
-		dropDown(b.getDdCCMonth(), "May");
-		dropDown(b.getDdCCYear(),"2022");
-		fill(b.getDdCC_Cvv(), "123");
-		btnClick(b.getBtnBookNow());
-		screenShot();
-		
 	}
 
-	@Then("verifying the details")
-	public void tc4()  {
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	@When("user clicks login button")
+	public void tc3() {
+		btnClick(pageObjectManager.getSelectHotelPOJO().getBtnRadio());
+		btnClick(pageObjectManager.getSelectHotelPOJO().getBtnContinue());
+		screenShot();
+		fill(pageObjectManager.getBookHotelPOJO().getTxtFirstName(), "Arul");
+		fill(pageObjectManager.getBookHotelPOJO().getTxtLastName(), "Murugan");
+		fill(pageObjectManager.getBookHotelPOJO().getTxtAddress(), "Chennai");
+		fill(pageObjectManager.getBookHotelPOJO().getTxtCCNum(), "1234123412341234");
+		dropDown(pageObjectManager.getBookHotelPOJO().getDdCCType(), "VISA");
+		dropDown(pageObjectManager.getBookHotelPOJO().getDdCCMonth(), "May");
+		dropDown(pageObjectManager.getBookHotelPOJO().getDdCCYear(), "2022");
+		fill(pageObjectManager.getBookHotelPOJO().getDdCC_Cvv(), "123");
+		btnClick(pageObjectManager.getBookHotelPOJO().getBtnBookNow());
+		screenShot();
+		driver.manage().timeouts().implicitlyWait(6, TimeUnit.SECONDS);
 		WebElement orderNo = driver.findElement(By.xpath("(//input[@type='text'])[16]"));
 		String attribute = orderNo.getAttribute("value");
 		screenShot();
 		System.out.println(attribute);
-		ConfiramtionPOJO c = new ConfiramtionPOJO();
-		btnClick(c.getBtnBookedIternary());
-		WebElement boxCancel = driver.findElement(By.xpath("//input[@value='"+attribute+"']/parent::td/preceding-sibling::td"));
+		btnClick(pageObjectManager.getConfiramtionPOJO().getBtnBookedIternary());
+		WebElement boxCancel = driver
+				.findElement(By.xpath("//input[@value='" + attribute + "']/parent::td/preceding-sibling::td"));
 		boxCancel.click();
 		WebElement btnCancelSelected = driver.findElement(By.xpath("//input[@name='cancelall']"));
 		btnCancelSelected.click();
 		Alert a = driver.switchTo().alert();
 		a.accept();
-		
+	}
+
+	@Then("verifying the details")
+	public void tc4() {
+		System.out.println();
 	}
 }
